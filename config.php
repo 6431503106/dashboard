@@ -1,5 +1,6 @@
 <?php
 // ข้อมูลการเชื่อมต่อฐานข้อมูล
+/*
 $servername = "localhost";
 $username = "root";
 $password = "";
@@ -67,4 +68,4 @@ if ($uploadOk == 0) {
 }
 
 $conn->close();
-?>
+?>*/

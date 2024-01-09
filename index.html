@@ -211,61 +211,63 @@
 
 
   
-  <script type="text/javascript">
-       $(document).ready(function(){
-	      $(".xp-menubar").on('click',function(){
-		    $("#sidebar").toggleClass('active');
-			$("#content").toggleClass('active');
-		  });
-		  
-		  $('.xp-menubar,.body-overlay').on('click',function(){
-		     $("#sidebar,.body-overlay").toggleClass('show-nav');
-		  });
-		
-		  $('#addProductsModal button.btn-success').on('click', function() {
-    // ดึงข้อมูลจากฟอร์ม
-    var productName = $('#addProductsModal input[name="productName"]').val();
-    var productCode = $('#addProductsModal input[name="productCode"]').val();
-    var productQuantity = $('#addProductsModal input[name="productQuantity"]').val();
-    var productImage = $('#addProductsModal input[name="productImage"]')[0].files[0];
-
-    // เพิ่มข้อมูลในตาราง
-    var newRow = '<tr>' +
-         '<td style="max-width: 500px; overflow: hidden; text-overflow: ellipsis;">' +
-            productName +
-            '<br><img src="' + getProductImageURL(productImage) +
-            '" alt="" style="max-width: 500px; max-height: 500px;">' +
-            '</td>' +
-        '<td>' + productCode + '</td>' +
-        '<td>' + productQuantity + '</td>' +
-        '<td>' +
-        '<a href="#editProductsModal" class="edit" data-toggle="modal">' +
-        '<i class="material-icons" data-toggle="tooltip" title="Edit">&#xE254;</i>' +
-        '</a>' +
-        '<a href="#deleteProductsModal" class="delete" data-toggle="modal">' +
-        '<i class="material-icons" data-toggle="tooltip" title="Delete">&#xE872;</i>' +
-        '</a>' +
-        '</td>' +
-        '</tr>';
-
-    // เพิ่มแถวใหม่ในตาราง
-    $('table tbody').append(newRow);
-
-    // ปิด modal
-    $('#addProductsModal').modal('hide');
-});
-
-// ฟังก์ชันสำหรับดึง URL ของรูปภาพจาก File object
-function getProductImageURL(file) {
-    var imageURL = '';
-    if (file) {
-        imageURL = URL.createObjectURL(file);
-    }
-    return imageURL;
-}
-
+    <script type="text/javascript">
+        $(document).ready(function(){
+            $(".xp-menubar").on('click',function(){
+                $("#sidebar").toggleClass('active');
+                $("#content").toggleClass('active');
+            });
+    
+            $('.xp-menubar,.body-overlay').on('click',function(){
+                $("#sidebar,.body-overlay").toggleClass('show-nav');
+            });
+    
+            // Modify the click event for the "Add" button
+            $('#addProductsModal button.btn-success').on('click', function() {
+                // Get data from the form
+                var productName = $('#addProductsModal input[name="productName"]').val();
+                var productCode = $('#addProductsModal input[name="productCode"]').val();
+                var productQuantity = $('#addProductsModal input[name="productQuantity"]').val();
+                var productImage = $('#addProductsModal input[name="productImage"]')[0].files[0];
+    
+                // Create a FormData object to send files as well
+                var formData = new FormData();
+                formData.append('productName', productName);
+                formData.append('productCode', productCode);
+                formData.append('productQuantity', productQuantity);
+                formData.append('productImage', productImage);
+    
+                // Send a POST request to your backend
+                $.ajax({
+                    type: 'POST',
+                    url: 'mongodb://localhost:27017/crud-app', // Change this URL to your backend endpoint
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    success: function(response) {
+                        // Handle the success response if needed
+                        console.log(response);
+                    },
+                    error: function(error) {
+                        // Handle the error response if needed
+                        console.error(error);
+                    }
+                });
+    
+                // Close the modal
+                $('#addProductsModal').modal('hide');
+            });
+    
+            // Function to get the URL of the image
+            function getProductImageURL(file) {
+                var imageURL = '';
+                if (file) {
+                    imageURL = URL.createObjectURL(file);
+                }
+                return imageURL;
+            }
         });
-</script>
+    </script>
     </script>
 </body>
 </html>
